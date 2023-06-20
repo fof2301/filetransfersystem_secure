@@ -55,11 +55,36 @@ class senderClass():
         
         # Return the server and thread objects
         return server, thread
-    
+
+class reciever_class():
+    def __init__(self,file,ip:str):
+        self.file=file
+        self.ip=ip
+    def recieve_file(self):
+        print("server opened")
+        url = "http://"+self.ip+":8000/"+self.file
+        print(url)
+        print(self.file)
+        # URL of the image to be downloaded is defined as url
+        try:
+            r = requests.get(url) # create HTTP response object
+        except:
+            FileNotFoundError
+        # # send a HTTP request to the server and save
+        # # the HTTP response in a response object called r
+        with open(str(Path.cwd())+"/"+"tmp_encrypted.png.png",'wb') as f:
+        
+        #     # Saving received content as a png file in
+        #     # binary format
+        
+        #     # write the contents of the response (r.content)
+            # to a new file in binary mode.
+            f.write(r.content)    
+        dec("tmp_encrypted.png.png",str(Path.cwd())+"/secrets/")         
+
 class filehandler(encrypterClass,decrypterClass,senderClass):
     def __init__(self,file,fpath):
         self.file=file
-        self.path=fpath
         self.fpath=str(Path.cwd())+"/secrets"
     def encrypt(self):
         enc(self.file,self.fpath)
@@ -71,14 +96,11 @@ class filehandler(encrypterClass,decrypterClass,senderClass):
         print("here")
         filehandler.encrypt(self)
         s1=senderClass(self.file)
-        
         server, thread = s1.start_web_server()
-        print("server inititated")
-    def recieve():
-        pass    
-    
-
-    
+        print("server inititated")   
+      
+        
+        
 
 # create the root window
 root = tk.Tk()
@@ -160,26 +182,15 @@ def web_server_initiate():
 
 
 def recieve_file():
-    print("server opened")
-    url = "http://192.168.23.95:8000/tmp_encrypted.png.png"
-    # URL of the image to be downloaded is defined as url
-    try:
-        r = requests.get(url) # create HTTP response object
-    except:
-        FileNotFoundError
-    # # send a HTTP request to the server and save
-    # # the HTTP response in a response object called r
-    with open("encrypted.png.png",'wb') as f:
-    
-    #     # Saving received content as a png file in
-    #     # binary format
-    
-    #     # write the contents of the response (r.content)
-        # to a new file in binary mode.
-        f.write(r.content)
-    file4 = filehandler("encrypted.png.png",str(Path.cwd()))
-    file4.decrypt()    
-    
+    ip=get_input()
+    file4 = reciever_class("tmp_encrypted.png.png",ip)
+    file4.recieve_file()
+
+
+def get_input():
+    input_text = entry.get()
+    print(input_text)
+    return input_text  
     
 
 #button
@@ -207,16 +218,32 @@ button4 = Button(
     command=recieve_file,
     width=10
 )
+
+button5 = Button(
+    root, 
+    text="Sender's IP", 
+    command=get_input)
+
+# entry = tk.Entry(root)
+# entry.pack()
+
+# Create a button to retrieve the input text
+entry = tk.Entry(root)
+
 # Configuring the grid layout
 root.columnconfigure(0, weight=1)  # Center align the buttons horizontally
 
 # Placing the buttons on the grid
-button1.grid(row=0, column=0, padx=10, pady=15)
-button2.grid(row=1, column=0, padx=10, pady=10)
-button3.grid(row=2, column=0, padx=10, pady=10)
-button4.grid(row=3, column=0, padx=10, pady=10)
+button1.grid(row=0, column=0, padx=10, pady=10)
+button2.grid(row=0, column=1, padx=10, pady=10)
+button3.grid(row=1, column=0, padx=10, pady=10)
+button4.grid(row=1, column=1,padx=10, pady=10 )
+
+entry.grid(row=2, column=1,padx=10, pady=5)
+
 
 
 # run the application
 root.mainloop()
+
 
