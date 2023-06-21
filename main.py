@@ -15,7 +15,6 @@ import requests
 from pathlib import Path
 
 
-
 class decrypterClass():
     def __init__(self,file,fpath):
         self.file=file
@@ -57,23 +56,21 @@ class senderClass():
         return server, thread
 
 class reciever_class():
-    def __init__(self,file,ip:str):
+    def __init__(self,file:str,ip:str):
         self.file=file
         self.ip=ip
     def recieve_file(self):
         print("server opened")
-        url = "http://"+self.ip+":8000/"+self.file
-        print(url)
-        print(self.file)
         # URL of the image to be downloaded is defined as url
         try:
-            r = requests.get(url) # create HTTP response object
+                url = "http://"+self.ip+":8000/"+self.file
+                r = requests.get(url) # create HTTP response object
+                print(str(r))
         except:
             FileNotFoundError
         # # send a HTTP request to the server and save
         # # the HTTP response in a response object called r
         with open(str(Path.cwd())+"/"+"tmp_encrypted.png.png",'wb') as f:
-        
         #     # Saving received content as a png file in
         #     # binary format
         
